@@ -10,6 +10,8 @@ describe("Block creation", () => {
 
     expect(block.index).toBe(GENESIS_DATA.index);
     expect(block.previousHash).toBe(GENESIS_DATA.previousHash);
+    expect(block.nonce).toBe(GENESIS_DATA.nonce);
+    expect(block.difficulty).toBe(GENESIS_DATA.difficulty);
     expect(block.data).toEqual(GENESIS_DATA.data);
     expect(block.timestamp).toEqual(GENESIS_DATA.timestamp);
     expect(block.hash).toBeDefined();
@@ -34,7 +36,7 @@ describe("Block mining", () => {
   };
   const minedBlock = Block.mineBlock({ lastBlock, data });
 
-  it("should mine a block with the correct difficulty", async () => {
+  it("should mine a block", () => {
     expect(minedBlock).instanceof(Block);
   });
 
@@ -48,5 +50,11 @@ describe("Block mining", () => {
 
   it("the timestamp should be greater than or equal to the last block's timestamp", () => {
     expect(minedBlock.timestamp).toBeGreaterThanOrEqual(lastBlock.timestamp);
+  });
+
+  it("sets a `hash` that match the difficulty criteria", () => {
+    expect(minedBlock.hash.substring(0, minedBlock.difficulty)).toEqual(
+      "0".repeat(minedBlock.difficulty)
+    );
   });
 });

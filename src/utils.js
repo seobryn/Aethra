@@ -7,12 +7,21 @@ import CryptoJS from "crypto-js";
  * @param {Omit<Block, "hash">} block - The block to generate the hash for.
  * @returns {string} The hexadecimal representation of the hash.
  */
-export function generateBlockHash({ data, previousHash, timestamp, index }) {
+export function generateBlockHash({
+  data,
+  previousHash,
+  timestamp,
+  index,
+  nonce,
+  difficulty,
+}) {
   const stringifiedBlock = JSON.stringify({
     data,
     previousHash,
     timestamp,
     index,
+    nonce,
+    difficulty,
   });
   return CryptoJS.SHA256(stringifiedBlock).toString(CryptoJS.enc.Hex);
 }

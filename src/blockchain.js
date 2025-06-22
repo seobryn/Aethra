@@ -60,7 +60,8 @@ export class Blockchain {
     }
 
     for (let i = 1; i < chain.length; i += 1) {
-      const { timestamp, previousHash, hash, data, index } = chain[i];
+      const { timestamp, previousHash, hash, data, index, difficulty, nonce } =
+        chain[i];
       const lastBlockHash = chain[i - 1].hash;
 
       if (lastBlockHash !== previousHash) {
@@ -72,6 +73,8 @@ export class Blockchain {
         previousHash,
         timestamp,
         index,
+        nonce,
+        difficulty,
       });
 
       if (validatedHash !== hash) {

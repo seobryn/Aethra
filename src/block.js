@@ -9,12 +9,40 @@ export class Block {
    * Creates a new block.
    * @param {Block} blockData - BlockData
    */
-  constructor({ index, timestamp, previousHash, data, hash }) {
+  constructor({
+    index,
+    timestamp,
+    previousHash,
+    data,
+    hash,
+    nonce,
+    difficulty,
+  }) {
+    /**
+     * @type {Number}
+     */
     this.index = index;
+    /**
+     * @type {string}
+     */
     this.previousHash = previousHash;
     this.data = data;
+    /**
+     * @type {Number}
+     */
     this.timestamp = timestamp;
+    /**
+     * @type {string}
+     */
     this.hash = hash;
+    /**
+     * @type {Number}
+     */
+    this.nonce = nonce;
+    /**
+     * @type {Number}
+     */
+    this.difficulty = difficulty;
   }
 
   /**
@@ -36,10 +64,33 @@ export class Block {
    * @returns {Block} - The newly mined block.
    */
   static mineBlock({ lastBlock, data }) {
+    let timestamp, hash;
     const index = lastBlock.index + 1;
     const previousHash = lastBlock.hash;
-    const timestamp = Date.now();
-    const hash = generateBlockHash({ index, timestamp, previousHash, data });
-    return new Block({ index, timestamp, previousHash, data, hash });
+    let nonce = 0;
+    const { difficulty } = lastBlock;
+
+    do {
+      nonce += 1;
+      timestamp = Date.now();
+      hash = generateBlockHash({
+        index,
+        timestamp,
+        previousHash,
+        data,
+        difficulty,
+        nonce,
+      });
+    } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
+
+    return new Block({
+      index,
+      timestamp,
+      previousHash,
+      data,
+      hash,
+      difficulty,
+      nonce,
+    });
   }
 }
