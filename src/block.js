@@ -1,5 +1,5 @@
-import { config, MINE_RATE, INITIAL_DIFFICULTY } from "./config";
-import { generateBlockHash } from "./utils";
+import { config, MINE_RATE, INITIAL_DIFFICULTY } from "./config.js";
+import { generateBlockHash } from "./utils.js";
 
 /**
  * Represents a single block in the blockchain.

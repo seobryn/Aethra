@@ -1,5 +1,5 @@
-import { Block } from "./block";
-import { generateBlockHash } from "./utils";
+import { Block } from "./block.js";
+import { generateBlockHash } from "./utils.js";
 
 export class Blockchain {
   constructor() {

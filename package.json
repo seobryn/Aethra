@@ -9,7 +9,8 @@
   "main": "index.js",
   "packageManager": "pnpm@10.7.1",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "average": "node ./src/average-work.js"
   },
   "dependencies": {
     "crypto-js": "^4.2.0",
