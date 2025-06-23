@@ -1,4 +1,4 @@
-import { config } from "./config";
+import { config, MINE_RATE, INITIAL_DIFFICULTY } from "./config";
 import { generateBlockHash } from "./utils";
 
 /**
@@ -67,12 +67,17 @@ export class Block {
     let timestamp, hash;
     const index = lastBlock.index + 1;
     const previousHash = lastBlock.hash;
+
+    let { difficulty } = lastBlock;
     let nonce = 0;
-    const { difficulty } = lastBlock;
 
     do {
       nonce += 1;
       timestamp = Date.now();
+      difficulty = Block.adjustDifficulty({
+        originalBlock: lastBlock,
+        timestamp,
+      });
       hash = generateBlockHash({
         index,
         timestamp,
@@ -92,5 +97,22 @@ export class Block {
       difficulty,
       nonce,
     });
+  }
+
+  /**
+   * Adjusts the difficulty based on the time taken to mine a block.
+   * @typedef {Object} AdjustDifficultyParams
+   * @property {Block} originalBlock - The original block that was mined.
+   * @property {Number} timestamp - The current timestamp.
+   * @returns {Number} - The new difficulty level.
+   */
+  static adjustDifficulty({ originalBlock, timestamp }) {
+    const timeTaken = timestamp - originalBlock.timestamp;
+    if (timeTaken < MINE_RATE) {
+      return originalBlock.difficulty + 1;
+    } else if (timeTaken > MINE_RATE) {
+      return Math.max(originalBlock.difficulty - 1, INITIAL_DIFFICULTY);
+    }
+    return originalBlock.difficulty;
   }
 }

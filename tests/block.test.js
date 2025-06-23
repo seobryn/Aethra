@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Block } from "../src/block";
-import { config } from "../src/config";
+import { config, MINE_RATE } from "../src/config";
 import { generateBlockHash } from "../src/utils";
 
 describe("Block creation", () => {
@@ -56,5 +56,27 @@ describe("Block mining", () => {
     expect(minedBlock.hash.substring(0, minedBlock.difficulty)).toEqual(
       "0".repeat(minedBlock.difficulty)
     );
+  });
+});
+
+describe("Adjust difficulty", () => {
+  const block = Block.genesis();
+
+  it("raises the difficulty for a quickly mined block", () => {
+    expect(
+      Block.adjustDifficulty({
+        originalBlock: block,
+        timestamp: block.timestamp + MINE_RATE - 100,
+      })
+    ).toEqual(block.difficulty + 1);
+  });
+
+  it("lowers the difficulty for a quickly mined block", () => {
+    expect(
+      Block.adjustDifficulty({
+        originalBlock: block,
+        timestamp: block.timestamp + MINE_RATE + 100,
+      })
+    ).toEqual(block.difficulty);
   });
 });

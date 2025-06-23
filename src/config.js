@@ -1,5 +1,7 @@
 export const INITIAL_DIFFICULTY = 2;
 
+export const MINE_RATE = 10_000_000;
+
 export const config = {
   GENESIS_DATA: {
     index: 0,
