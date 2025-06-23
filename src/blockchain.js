@@ -63,8 +63,13 @@ export class Blockchain {
       const { timestamp, previousHash, hash, data, index, difficulty, nonce } =
         chain[i];
       const lastBlockHash = chain[i - 1].hash;
+      const lastDifficulty = chain[i - 1].difficulty;
 
       if (lastBlockHash !== previousHash) {
+        return false;
+      }
+
+      if (Math.abs(lastDifficulty - difficulty) > 1) {
         return false;
       }
 

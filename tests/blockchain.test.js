@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { Blockchain } from "../src/blockchain.js";
 import { Block } from "../src/block.js";
+import { generateBlockHash } from "../src/utils.js";
 
 describe("Blockchain", () => {
   /**
@@ -65,6 +66,41 @@ describe("Blockchain", () => {
       describe("and the chain does not contain any invalid blocks", () => {
         it("returns true", () => {
           expect(Blockchain.isValidChain(blockchain.chain)).toBe(true);
+        });
+      });
+
+      describe("and the chain contains a block with a jumped difficulty", () => {
+        it("returns false", () => {
+          const lastBlock = blockchain.lastBlock;
+          const previousHash = lastBlock.hash;
+          const timestamp = Date.now();
+          const nonce = 0;
+          const data = [];
+
+          const difficulty = lastBlock.difficulty - 3;
+          const index = lastBlock.index + 1;
+
+          const hash = generateBlockHash({
+            index,
+            data,
+            difficulty,
+            nonce,
+            previousHash,
+            timestamp,
+          });
+
+          const badBlock = new Block({
+            data,
+            difficulty,
+            hash,
+            index,
+            nonce,
+            previousHash,
+            timestamp,
+          });
+          blockchain.chain.push(badBlock);
+
+          expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
         });
       });
     });
